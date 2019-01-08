@@ -1,0 +1,1 @@
+{"type":"Image","media_name":"20-12-2018_13.9.1","offer_text":"wedsfsdfsdfsd","resource":"DNDM-20-12-2018_13.9.1.jpg","duration":"5","display_scroll_txt":false,"bg_audio":"","play_bg_audio":"false","is_skip":"false"}
