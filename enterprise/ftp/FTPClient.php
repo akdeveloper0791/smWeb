@@ -32,7 +32,7 @@ Class FTPClient
     return $this->messageArray;
   }
 
-  public function connect ($server, $isPassive = false)
+  public function connect ($server, $isPassive = true)
   {
  
     // *** Set up basic connection
@@ -49,7 +49,7 @@ Class FTPClient
 	    // *** Login with username and password
 	    $loginResult = ftp_login($this->connectionId, $this->ftpUser, $this->ftpPassword);
 	 
-	    // *** Sets passive mode on/off (default off)
+	    // *** Sets passive mode on/off (default on)
 	    ftp_pasv($this->connectionId, $isPassive);
 	 
 	    // *** Check connection

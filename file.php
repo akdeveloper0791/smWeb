@@ -546,8 +546,8 @@ $("#pdf-next").on('click', function() {
            var datetime = currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() + "_"  
-                + currentdate.getHours() + "."  
-                + currentdate.getMinutes() + "." 
+                + currentdate.getHours() + "-"  
+                + currentdate.getMinutes() + "-" 
                 + currentdate.getSeconds();
            document.getElementById("media_name").value=datetime;
 

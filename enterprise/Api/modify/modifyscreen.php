@@ -1,86 +1,72 @@
 <?php
 
-require '..\database.php';
+require '..\..\..\database.php';
 
 $link=mysqli_connect($server,$username,$password);
 mysqli_select_db($link,$database);
-$user=$_POST['name'];
-$email=$_POST['email'];
-$password=$_POST['password'];
-$status=$_POST['status'];
-// $default_Channel = json_decode($_REQUEST['default_Channel'],true);
-// echo $user." ".$email." ".$password;
-// print_r($default_Channel);
-$stmt = $conn->prepare('SELECT * FROM users WHERE email=?');
-$stmt->bindParam(1, $email, PDO::PARAM_INT);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+// $user=$_POST['name'];
+// $email=$_POST['email'];
+$user_id=$_POST['user_id'];
+$default_Channel = json_decode($_REQUEST['ch_id'],true);
 
-if($row>0)
-{
- echo json_encode(array('statusCode'=>3,'status'=>'user account exists'));
-}else{
+// $stmt = $conn->prepare('SELECT * FROM users WHERE email=?');
+// $stmt->bindParam(1, $email, PDO::PARAM_INT);
+// $stmt->execute();
+// $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// if($row>0)
+// {
+//  echo json_encode(array('statusCode'=>3,'status'=>'user account exists'));
+// }else{
 try
 {
 
 	   // begin the transaction
 	 // Set autocommit to off
-	// mysqli_autocommit($link,FALSE);
+	mysqli_autocommit($link,FALSE);
 
-	//   $isCommit = true;
+	  $isCommit = true;
 		
-		$sql = "INSERT INTO users (user, email, password, status)
-		       VALUES ('".$user."', '".$email."', '".password_hash($_POST['password'], PASSWORD_BCRYPT)."','".$status."')";
+		// $sql = "INSERT INTO users (user, email, password)
+		//        VALUES ('".$user."', '".$email."', '".password_hash($_POST['password'], PASSWORD_BCRYPT)."')";
 
-   if ($link->query($sql) === TRUE)
-   {
-    echo json_encode(array('statusCode'=>0,'status'=>'Successfully created new user'));
+   // if ($link->query($sql) === TRUE)
+   // {
+  	    // $user_id = $link->insert_id;
+
+          // $user_id = 1;
+  	     $userChannelArray = array();
+
+  	    foreach ($default_Channel as $value) {
+
+  	    	$insertValue = "('".$user_id."', '".$value."')";
+
+  	    	array_push($userChannelArray, $insertValue);
+            $insertValue = "";
+  	    	
+  	    }
+        
+  	    $sql = "INSERT INTO enterprise_channels (user_id, ch_id) VALUES ".implode(",", $userChannelArray);
+
+          if($link->query($sql) == TRUE)
+          {
+          	
+          }else{
+          	$isCommit = FALSE;
+          } 
+			
+
+
+         if($isCommit)
+              {
+              	mysqli_commit($link);
+              
+                echo json_encode(array('statusCode'=>0,'status'=>'Successfully created new user'));
               }else
               {
-               
+              	 mysqli_rollback($link);
                 echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue creating your account'));
               }
-
-  	//     $user_id = $link->insert_id;
-
-
-  	//      $userChannelArray = array();
-
-  	//     foreach ($default_Channel as $value) {
-
-  	//     	$insertValue = "('".$user_id."', '".$value."')";
-
-  	//     	array_push($userChannelArray, $insertValue);
-   //          $insertValue = "";
-  	    	
-  	//     }
-  	    
-  	   
-  	//     $sql = "INSERT INTO user_channels (user_id, ch_id) VALUES ".implode(",", $userChannelArray);
-
-   //        if($link->query($sql) == TRUE)
-   //        {
-          	
-   //        }else{
-   //        	$isCommit = FALSE;
-   //        } 
-			
-	
-   // }else{
-   // 	$isCommit = FALSE;
-   		
-   // }
-
-   //       if($isCommit)
-   //            {
-   //            	mysqli_commit($link);
-              
-   //              echo json_encode(array('statusCode'=>0,'status'=>'Successfully created new user'));
-   //            }else
-   //            {
-   //            	 mysqli_rollback($link);
-   //              echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue creating your account'));
-   //            }
 }catch(Exception $e)
  {
                  // roll back the transaction if something failed
@@ -88,7 +74,7 @@ try
                 $status =  "Sorry there must have been an issue creating your account " . $e->getMessage();
                 echo json_encode(array('statusCode'=>2,'status'=>$status));
  }
-}
+
 
 
 

@@ -20,18 +20,6 @@ if( isset($_SESSION['user_id']) ){
 
 }
 
-//echo "-------ip".$_REQUEST['screen'];
-     $screen_mode_into = $_REQUEST['mode'];
-
-      if($screen_mode_into=="'enterprise'")
-      {
-          $cookie_name = "Checked_Screens";
-          $cookie_value = $_REQUEST['screen'];
-
-          setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-
-      }
-
 
 ?>
 
@@ -294,20 +282,31 @@ video{
            var datetime = currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() + "_"  
-                + currentdate.getHours() + "."  
-                + currentdate.getMinutes() + "." 
+                + currentdate.getHours() + "-"  
+                + currentdate.getMinutes() + "-" 
                 + currentdate.getSeconds();
            document.getElementById("media_name").value=datetime;
-           
-  var videotmppath;
+    var duration = 10;//seconds      
+    var videotmppath;
  
 
     $('#videopath').change( function(event) {
+     
      videotmppath = URL.createObjectURL(event.target.files[0]);
     // $("#imagepreview").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
     console.log(videotmppath);
     var iframe = document.getElementById("region1");
     iframe.src = videotmppath;
+
+    var video = document.createElement('video');
+    video.preload = 'metadata';
+
+    video.onloadedmetadata = function() {
+    window.URL.revokeObjectURL(video.src);
+    duration = parseInt(video.duration);
+    
+    }
+    video.src = videotmppath;
     // $("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
 });
 
@@ -344,7 +343,7 @@ video{
               
           }else 
           {
-              swal("File format not supported..!");
+              swal("File Format Not Supported..!");
               imageclearEvent();
           }
             
@@ -365,18 +364,26 @@ video{
     function ScreenConnection()
     {
 
-        if(screen_mode=="enterprise")
-    {
-       //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
-       //console.log("Enterprise mode is on");
-    }else if(screen_mode=="local")
-    {
-       //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
-       //console.log("Enterprise mode is on");
-    }else 
-    {
+      if(screen_mode=="enterprise")
+      {
+         //MultiSubmit(screen_mode);
+         DisplaySubmit(screen_mode);
+         //console.log("Enterprise mode is on");
+      }else 
+      {
+          // var Channel_Channel = document.getElementById('Channel_Channel').value;
+          // //alert(Channel_Channel);
+          // if(Channel_Channel=='Select Screen' || Channel_Channel=='' || Channel_Channel==null){
+          //       swal({
+          //         title: 'Select Respective Screen to Display.!',
+          //         timer: 2000
+          //       });
+          //         return false;
+          // }
+
+          //alert(screen_name);
+
+          // ajaxindicatorstart("<img src='images/ajax-loader.gif'><br/>File transfer in progress<br/> Please wait...!");
 
           $(document).ajaxSend(function () {
             $("#loading").show();
@@ -434,7 +441,7 @@ video{
                             if (isConfirm) {
                             ScreenConnection1();
                           } else {
-                              swal("Cancelled", "content not published", "error");
+                              swal("Cancelled", "content not Published", "error");
                             }
                           });
                     }
@@ -456,19 +463,16 @@ video{
   function DisplaySubmit(screenmode)
   {
 
-       if(screenmode=="enterprise")
-      {
-        var url_mode = "/smweb/enterprise/Api/PublishSingleRegCampaign.php";
-      }
-      else if(screenmode=="local")
-      {
-        console.log("successfully");
-        var url_mode = "local/localvideojsoncreation.php";
-      }else 
-      {
-        var url_mode = "php/imagejsoncreation.php";
-      }
-      console.log("Url=="+url_mode);
+    if(screenmode=="enterprise")
+    {
+      var url_mode = "/smweb/enterprise/Api/PublishSingleRegCampaign.php";
+    }
+    else
+    {
+      var url_mode = "php/videojsoncreation.php";
+    }
+
+    console.log("Url=="+url_mode);
 
 
     /*var url_url = document.getElementById('url').value;
@@ -492,7 +496,7 @@ video{
 
     if(media_name=='Enter Media Name' || media_name=='' || media_name==null){
       swal({
-      title: 'Please enter media name!',
+      title: 'Please Enter media name!',
       timer: 2000
     });
       return false;
@@ -514,7 +518,7 @@ video{
 
           if(file_name==undefined || file_name==null )
           {
-             swal("Select video file...!");
+             swal("Select Video file...!");
              
           }else 
           {    
@@ -540,17 +544,19 @@ video{
                   // {
                   //   var boolean_scroll_txt = false;
                   // }
-
-                  var datastring = {}
-                      datastring['type'] = "Video";
-                      datastring['media_name'] = media_name;
-                      datastring['offer_text'] = text_media;
-                      datastring['resource'] = fileee_name;
-                      //datastring['duration'] = duration;
-                      datastring['display_scroll_txt'] = false;
-                    
-                      var data = JSON.stringify(datastring);
-                     console.log(data);
+      var newDatastring = {};
+      newDatastring['type'] = "multi_region";
+      newDatastring['offer_text'] =  text_media;
+      newDatastring['display_scroll_txt'] =  false;
+      newDatastring['resource'] = fileee_name;
+      newDatastring['duration'] = duration;
+       var regions = [];
+       var regionInfo = getVideoRegionInfo(fileee_name);
+       regions.push(regionInfo);
+      newDatastring['regions'] =  regions;
+                                      
+                      var data = JSON.stringify(newDatastring);
+                     console.log("prepared data "+data);
                       ajaxindicatorstart("<img src='images/ajax-loader.gif'><br/>File transfer in progress<br/> Please wait...!");
                       var form_data = new FormData(); 
                           //form_data.append('duration',file_new_name);
@@ -558,7 +564,7 @@ video{
                           form_data.append('data',data);
                           form_data.append('path',screen_name);
                           form_data.append('media_name',media_name);
-    
+                          
                        $.ajax({
                         type: "POST",
                         dataType: 'text',
@@ -571,7 +577,7 @@ video{
                          
                          success: function(data){
                            ajaxindicatorstop();
-                          //console.log("data==="+data);
+                          console.log("data==="+data);
                            try
                            {
                             
@@ -605,32 +611,7 @@ video{
                                    swal(jsonResponse.status);
 
                                 }  
-                              }else if(screenmode=="local")
-                      {
-                
-                          if(data == "New record created successfully")
-                          {
-                            
-              
-                            
-                            setTimeout(function () { 
-                            swal({
-                              title: "success!",
-                              text: "Campaign has been saved in C:/Campaign",
-                              type: "success",
-                              confirmButtonText: "OK"
-                            },
-                            function(isConfirm){
-                              if (isConfirm) {
-                                 window.location.href="local.php";
-                              }
-                            }); }, 1000);
-                            
-                          }else
-                          {
-                             console.log(" video Error");
-                          }
-                      }else 
+                              }else 
                               {
                                 //var jsonResponse = JSON.parse(data);
                                 if(data == "New record created successfully")
@@ -737,7 +718,10 @@ video{
             //}); 
         }
 
-
+  function getVideoRegionInfo(mediaName)
+  {
+    return regionInfo = {"type":"Video","width":100,"height":100,"top_margin":0,"bottom_margin":0,"left_margin":0,"right_margin":0,"media_name":mediaName,"is_self_path":false,"properties":{"isStretch":true,"volume":100}}
+  }
 </script>
 <!-- modal -->
 

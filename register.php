@@ -246,6 +246,7 @@ var check = function() {
 	      		form_data.append('name',userName);
 	      		form_data.append('email',userEmail);
 	      		form_data.append('password',userPassword);
+	      		form_data.append('status',0);
 
             	// form_data.append('default_Channel',JSON.stringify(arrayGlobal));
 	      

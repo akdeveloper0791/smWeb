@@ -732,8 +732,8 @@ if( isset($_SESSION['user_id']) ){
            var datetime = currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() + "_"  
-                + currentdate.getHours() + "."  
-                + currentdate.getMinutes() + "." 
+                + currentdate.getHours() + "-"  
+                + currentdate.getMinutes() + "-" 
                 + currentdate.getSeconds();
            document.getElementById("file_media_name").value=datetime;
 
