@@ -14,7 +14,6 @@ if( isset($_SESSION['user_id']) ){
 
   $user = NULL;
 }
-
 /* error codes 
  1-> unable to connect with data base
  2-> No devices
@@ -45,28 +44,20 @@ $conn = mysqli_connect("localhost",$username,$password,$database);
        $resultData = array();
 
        if ($result->num_rows > 0) {
-	      echo "Inside result data ".$result->num_rows;
+	      
 	      $resultData = prepareResult($result);
 
         }
 
         if(!is_null($resultData) && count($resultData)>=1)
         {
-          echo "\nInside result data after processing".json_encode($resultData);
-
-          $result =  json_encode(array('statusCode'=>0));
-           echo $result;
+           echo json_encode(array('statusCode'=>0,
+           	'list'=>$resultData));
         }else
         {
-          echo "Inside result data after processing No data";
-
-          json_encode(array('statusCode'=>2,
-            'status'=>"No Displays Found"));
-
-        	echo $result;
+        	echo json_encode(array('statusCode'=>2,
+        		'status'=>"No Displays Found"));
         }
-
-        
 	}
 
 
@@ -76,11 +67,8 @@ $conn = mysqli_connect("localhost",$username,$password,$database);
       $rows = array();
      while($row = $result->fetch_assoc())
       {
-        //echo json_encode($row);
          array_push($rows,$row);
       }
-      echo json_encode($rows);
        return $rows;
-
 
 	}
