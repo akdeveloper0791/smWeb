@@ -109,10 +109,7 @@ if( isset($_SESSION['user_id']) ){
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -546,8 +543,8 @@ $("#pdf-next").on('click', function() {
            var datetime = currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() + "_"  
-                + currentdate.getHours() + "-"  
-                + currentdate.getMinutes() + "-" 
+                + currentdate.getHours() + "."  
+                + currentdate.getMinutes() + "." 
                 + currentdate.getSeconds();
            document.getElementById("media_name").value=datetime;
 
@@ -607,12 +604,12 @@ $("#pdf-next").on('click', function() {
       if(screen_mode=="enterprise")
       {
          //MultiSubmit(screen_mode);
-         DisplaySubmit(screen_mode);
+         DisplaySubmit(screen_mode,screen_name);
          //console.log("Enterprise mode is on");
       }else if(screen_mode=="local")
     {
        //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
+        DisplaySubmit(screen_mode,screen_name);
        console.log("local mode is on");
     }else 
       {
@@ -652,7 +649,7 @@ $("#pdf-next").on('click', function() {
                     if(jsonResponse.value==true)
                     {
                      //console.log(jsonResponse.status);
-                       DisplaySubmit(screen_mode);
+                       DisplaySubmit(screen_mode,screen_name);
                       //swal("success");
  
                       //window.location.reload();
@@ -693,14 +690,14 @@ $("#pdf-next").on('click', function() {
 
 
 
-function DisplaySubmit(screenmode)
+function DisplaySubmit(screenmode,path)
 {
 
       if(screenmode=="enterprise")
       {
           var url_mode = "/smweb/enterprise/Api/PublishSingleRegCampaign.php";
 
-          DisplaySubmitEnterpriseFTP(url_mode);
+        DisplaySubmitEnterpriseFTP(url_mode,screen_name);
       }else if(screenmode=="local")
       {
         //console.log("successfully");
@@ -919,7 +916,7 @@ function DisplaySubmit(screenmode)
   
 
 
-    function DisplaySubmitEnterpriseFTP(url_mode)
+    function DisplaySubmitEnterpriseFTP(url_mode,path)
     {
 
         console.log("Url=="+url_mode);
@@ -996,7 +993,7 @@ function DisplaySubmit(screenmode)
           ajaxindicatorstart("<img src='images/ajax-loader.gif'><br/>File transfer in progress<br/> Please wait...");
           var form_data = new FormData();     
             form_data.append('fileName',file_name);
-            form_data.append('path',screen_name);             
+            form_data.append('path',path);             
             form_data.append('data',data);
             //form_data.append('data1',data1);
             //form_data.append('offer_text',text_media);
@@ -1020,34 +1017,77 @@ function DisplaySubmit(screenmode)
 
                    try
                    {
-                      var jsonResponse = JSON.parse(data);
+                              var jsonResponse = JSON.parse(data);
 
-                      if(jsonResponse.statusCode==0)
-                      {           
-                        //swal(jsonResponse.status);
+                          if(jsonResponse.statusCode==0)
+                          {
+                            
+                          
 
-                        setTimeout(function () { 
-                          swal({
-                            title: "success",
-                            text: jsonResponse.status,
-                            type: "success",
-                            confirmButtonText: "OK"
-                          },
-                          function(isConfirm){
-                            if (isConfirm) {
-                              //window.location.reload();
+                            setTimeout(function () { 
+                            swal({
+                              title: "success",
+                              text: jsonResponse.status,
+                              type: "success",
+                              confirmButtonText: "OK"
+                            },
+                            function(isConfirm){
+                              if (isConfirm) {
+                            
                                 window.location = "/smweb/enterprise.php";
-                            }
-                          }); }, 1000);
+                              }
+                            }); }, 1000);
 
-                      }else if(jsonResponse.statusCode==1)
-                      {
-                        swal(jsonResponse.status);
-                      }
-                      else if(jsonResponse.statusCode==2)
-                      {
-                        swal(jsonResponse.status);
-                      } 
+                          }else if(jsonResponse.statusCode==1)
+                          {
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                        
+                          }
+                          else if(jsonResponse.statusCode==2)
+                          {
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                  DisplaySubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            } 
+                              
 
                    }catch(Exception)
                    {

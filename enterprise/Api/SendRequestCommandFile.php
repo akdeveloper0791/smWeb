@@ -35,7 +35,7 @@
          if($isUploaded)
          {
             echo json_encode(array('statusCode'=>0,
-           'status'=>'Request has been sent successfully'));
+           'status'=>'Delete request has been sent successfully'));
          }else{
 
            echo json_encode(array('statusCode'=>101,

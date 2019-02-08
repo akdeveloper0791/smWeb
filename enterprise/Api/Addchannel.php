@@ -14,7 +14,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if($row>0)
 {
- echo json_encode(array('statusCode'=>3,'status'=>'channel name exists'));
+ echo json_encode(array('statusCode'=>3,'status'=>'Group name exists'));
 }else{
 try
 {
@@ -30,17 +30,17 @@ try
      
 
               
-                echo json_encode(array('statusCode'=>0,'status'=>'Successfully created new user'));
+                echo json_encode(array('statusCode'=>0,'status'=>'Successfully created group'));
               }else
               {
                  
-                echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue creating '));
+                echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue creating group'));
               }
 }catch(Exception $e)
  {
                  // roll back the transaction if something failed
                 
-                $status =  "Sorry there must have been an issue creating your account " . $e->getMessage();
+                $status =  "Sorry there must have been an issue creating your group " . $e->getMessage();
                 echo json_encode(array('statusCode'=>2,'status'=>$status));
  }
 }

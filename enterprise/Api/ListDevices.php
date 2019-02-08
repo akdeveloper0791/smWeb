@@ -37,7 +37,7 @@ $conn = mysqli_connect("localhost",$username,$password,$database);
     //$sql = "SELECT * FROM enterprise_device_list ";
     // $sql = " SELECT * FROM `enterprise_device_list` WHERE sc_id IN ( SELECT name FROM enterprisechannel_table WHERE ch_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id'].") )";
     // $sql = " SELECT * FROM `enterprise_device_list` WHERE sc_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id']." )";
-     $sql = " SELECT * FROM `enterprise_device_list` WHERE name IN ( SELECT ch_id FROM enterprise_channel_table WHERE ch_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id']." ) )";
+     $sql = " SELECT * FROM enterprise_device_list WHERE ch_id IN ( SELECT ch_id FROM enterprise_channel_table WHERE ch_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id']." ) )";
     
 
        $result = $conn->query($sql);

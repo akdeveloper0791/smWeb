@@ -34,13 +34,12 @@ if( isset($_SESSION['user_id']) ){
 <meta name="generator" content="">
 <link href="../../css/bootstrap.min.css" rel="stylesheet">
 <link href="../../_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 <link href="../../css/style.css" rel="stylesheet">
 <script src="../../js/sweetalert.js"></script>
 <link rel="stylesheet" href="../../js/sweetalert.css">
 <script type="text/javascript" src="../../js/default_busy_loader.js"></script>
-<!-- <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet"> -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+
 <style type="text/css">
   html, body{
   margin:0;
@@ -119,10 +118,7 @@ th:first-child div{
 			</button>
 			<a href="../../index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
 		</div>
 		<div id="navbar-collapse-02" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -161,7 +157,13 @@ th:first-child div{
 			
 		</div>
       <div>
-      <center ><button onclick="modifyaccount();" style="margin-right:20px;">Modify Account</button><button onclick="deleteaccount();">Delete Account</button></center>
+      <center>
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" onclick="addaccount();" autofocus> Add Group </button>
+    <button type="button" class="btn btn-primary" onclick="modifyaccount();"> Assign Group </button>
+    <button type="button" class="btn btn-primary" onclick="deleteaccount();"> Delete Account</button>
+  </div>
+      </center>
       <br/>
     </div>
 <!-- 		<div class="wow-hr type_short">
@@ -172,7 +174,23 @@ th:first-child div{
 			</span>
 		</div> -->
 	</div>
-	<div class="rows" id="modify">
+  <!-- ********************************************** -->
+    <div class="rows" id="add" >
+              
+
+                        <div class="form-group">
+                              <label for="exampleInputPassword2">Group Name *</label>
+                           <input type="text" class="form-control" placeholder="Enter group name" name="channel" id="channel">
+                            </div>     
+                          <p></p>
+       <center>     
+       <a href="../../index.php"><button class="btn btn-danger" style="display:inline-block;">Close</button></a>          
+<button class="btn btn-success" id="submit" style="display:inline-block;" onclick="addscreen();">Add</button></center>
+  <p></p>  <p></p>
+
+  </div>
+  <!-- ************************************************************************ -->
+	<div class="rows" id="modify" style="display: none;">
 							
 
                         <div class="form-group">
@@ -194,7 +212,7 @@ th:first-child div{
                          <label for="exampleInputPassword2">Select group(s)</label>
                               <select name="default_Channel[]" id="default_Channel" class="selectpicker form-control"  multiple required >
                                  <?php 
-                                    $res=mysqli_query($link,"select * from enterprise_channel_table");
+                                    $res=mysqli_query($link,"SELECT * FROM enterprise_channel_table");
                                     while($row=mysqli_fetch_array($res)){
                                     ?>
                                   <option value="<?php echo $row["ch_id"]; ?>"><?php echo $row["names"]; ?></option>
@@ -207,11 +225,11 @@ th:first-child div{
                               <p></p>
        <center>     
        <a href="../../index.php"><button class="btn btn-danger" style="display:inline-block;">Close</button></a>          
-<button class="btn btn-success" id="submit" style="display:inline-block;" onclick="modifyscreen();">Modify</button></center>
+<button class="btn btn-success" id="submit" style="display:inline-block;" onclick="modifyscreen();">Assign</button></center>
   <p></p>  <p></p>
 
   </div>
-
+<!-- ********************************************************* -->
     <div class="rows" id="delete" style="display: none;">
               
 
@@ -357,14 +375,21 @@ $link-> close();
     console.log(JSON.stringify(arrayGlobal));
 })
 
+ function addaccount(){
+document.getElementById("add").style.display="block";
+document.getElementById("modify").style.display="none";
+document.getElementById("delete").style.display="none";
+}
    function modifyaccount(){
 document.getElementById("modify").style.display="block";
 document.getElementById("delete").style.display="none";
+document.getElementById("add").style.display="none";
 }
 
  function deleteaccount(){
 document.getElementById("modify").style.display="none";
 document.getElementById("delete").style.display="block";
+document.getElementById("add").style.display="none";
 }
 
 	function deletescreen(){
@@ -416,7 +441,7 @@ swal({
               {
                 //swal(jsonResponse.status);
                 swal({ 
-                title: "Screen",
+                title: "Staff Account",
                           text: "Deleted successfully",
                           type: "success"
                 },
@@ -507,6 +532,67 @@ var default_Channel = document.getElementById('default_Channel').value;
    }
         });
 }
+
+function addscreen(){
+  // var ch_id = document.getElementById('Channel_Channel').value;
+
+  var channel = document.getElementById('channel').value;
+
+
+  if(channel==' ' || channel=='' || channel==null){
+  swal({
+  title: 'Please enter group name..',
+  timer: 2000
+});
+  return false;
+} 
+            var form_data = new FormData();     
+            form_data.append('channel',channel);
+           
+    
+               $.ajax({
+                type: "POST",
+                dataType: 'text',
+                  url: "Addchannel.php",
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  data: form_data,                         
+                  type: 'post',
+                 
+                 success: function(data){
+
+                  console.log(data);
+             ajaxindicatorstop();
+             try
+             {
+
+              var jsonResponse = JSON.parse(data);
+              if(jsonResponse.statusCode==0)
+              {
+                //swal(jsonResponse.status);
+                swal({ 
+                title: "Group",
+                          text: "Created successfully",
+                          type: "success"
+                },
+                function(){
+                  window.location.reload();
+              });
+
+              }else 
+              {
+                swal(jsonResponse.status);
+              }
+             }catch(Exception)
+             {
+               alert(Exception.message);
+             }
+
+          }
+        });
+}
+
 </script>
 
 </body>

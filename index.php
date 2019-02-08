@@ -54,11 +54,11 @@ endif;
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"> -->
 <link href="css/style.css" rel="stylesheet">
  <link href="_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
 <!-- <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet"> -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 </head>
 <style type="text/css">
 .footer {
@@ -83,10 +83,7 @@ endif;
 			</button>
 			<a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
 		</div>
 		<div id="navbar-collapse-02" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -95,7 +92,7 @@ endif;
 				<li class="propClone"><a href="product.html">Delete Screen</a></li> -->
 				
 				<li class="propClone"><a href=""><span class="icon-phone-square"></span>+91 9900819475</a></li>
-				<li class="propClone" id="superuser"><a href="register.php">Create user</a></li>
+				
 			</ul>
 		</div>
 	</div>
@@ -206,7 +203,7 @@ endif;
  <script>
   
   
-          var x = location.hostname;
+          /*var x = location.hostname;
          var domain = ['127.0.0.1','localhost'];
       
             var domainlength = domain.length;
@@ -219,7 +216,7 @@ endif;
              $('#superuser').hide();   
           }
             
-            }
+            }*/
 
 
  $(document).ready(function () {

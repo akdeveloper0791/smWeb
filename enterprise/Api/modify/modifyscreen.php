@@ -61,11 +61,11 @@ try
               {
               	mysqli_commit($link);
               
-                echo json_encode(array('statusCode'=>0,'status'=>'Successfully created new user'));
+                echo json_encode(array('statusCode'=>0,'status'=>'Successfully assigned groups'));
               }else
               {
               	 mysqli_rollback($link);
-                echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue creating your account'));
+                echo json_encode(array('statusCode'=>1,'status'=>'Sorry there must have been an issue in assigning groups, please uncheck already assigned groups'));
               }
 }catch(Exception $e)
  {

@@ -2,7 +2,7 @@
 $server = 'localhost';
 $username = 'root';
 $password = 'adskite';
-$database = 'auth';
+$database = 'smweb';
 
 try{
 	$conn = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
@@ -27,3 +27,5 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 // }else{
 // 	  echo 'found';
 // }
+?>
+

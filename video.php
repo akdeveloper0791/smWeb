@@ -31,7 +31,6 @@ if( isset($_SESSION['user_id']) ){
 <link rel='shortcut icon' type='image/x-icon' href='images/signage.ico' />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <script src="js/js/popper.min.js"></script>
 <script src="js/js/jquery.min.js"></script>
@@ -41,7 +40,7 @@ if( isset($_SESSION['user_id']) ){
 <script src="js/sweetalert.js"></script>
 <script type="text/javascript" src="js/default_busy_loader.js"></script>
 <link href="_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 <style type="text/css">
 video{
 
@@ -99,10 +98,7 @@ video{
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -367,7 +363,7 @@ video{
       if(screen_mode=="enterprise")
       {
          //MultiSubmit(screen_mode);
-         DisplaySubmit(screen_mode);
+        DisplaySubmit(screen_mode,screen_name);
          //console.log("Enterprise mode is on");
       }else 
       {
@@ -420,7 +416,7 @@ video{
                     if(jsonResponse.value==true)
                     {
                      //console.log(jsonResponse.status);
-                       DisplaySubmit(screen_mode);
+                       DisplaySubmit(screen_mode,screen_name);
                       //swal("success");
  
                       //window.location.reload();
@@ -460,7 +456,7 @@ video{
 
 
 
-  function DisplaySubmit(screenmode)
+  function DisplaySubmit(screenmode,path)
   {
 
     if(screenmode=="enterprise")
@@ -562,7 +558,7 @@ video{
                           //form_data.append('duration',file_new_name);
                           form_data.append('fileName',file_name); 
                           form_data.append('data',data);
-                          form_data.append('path',screen_name);
+                          form_data.append('path',path);
                           form_data.append('media_name',media_name);
                           
                        $.ajax({
@@ -583,34 +579,76 @@ video{
                             
                               if(screenmode=="enterprise")
                               {
-                                  var jsonResponse = JSON.parse(data);
+                              var jsonResponse = JSON.parse(data);
 
-                                if(jsonResponse.statusCode==0)
-                                {
-                                  //swal(jsonResponse.status);
-                                  setTimeout(function () { 
-                                  swal({
-                                    title: "success!",
-                                    text: jsonResponse.status,
-                                    type: "success",
-                                    confirmButtonText: "OK"
-                                  },
-                                  function(isConfirm){
-                                    if (isConfirm) {
-                                      //window.location.reload();
-                                      window.location = "/smweb/enterprise.php";
-                                    }
-                                  }); }, 1000);
+                          if(jsonResponse.statusCode==0)
+                          {
+                            
+                          
 
-                                }else if(jsonResponse.statusCode==1)
-                                {
-                                   swal(jsonResponse.status);
+                            setTimeout(function () { 
+                            swal({
+                              title: "success",
+                              text: jsonResponse.status,
+                              type: "success",
+                              confirmButtonText: "OK"
+                            },
+                            function(isConfirm){
+                              if (isConfirm) {
+                            
+                                window.location = "/smweb/enterprise.php";
+                              }
+                            }); }, 1000);
+
+                          }else if(jsonResponse.statusCode==1)
+                          {
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
                                 }
-                                else if(jsonResponse.statusCode==2)
-                                {
-                                   swal(jsonResponse.status);
+                             });
+                        
+                          }
+                          else if(jsonResponse.statusCode==2)
+                          {
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
 
-                                }  
+                               if (isConfirm){
+                                   DisplaySubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            } 
                               }else 
                               {
                                 //var jsonResponse = JSON.parse(data);

@@ -44,14 +44,41 @@ if( isset($_SESSION['user_id']) ){
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <script src="js/sweetalert.js"></script>
 <link rel="stylesheet" href="js/sweetalert.css">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/default_busy_loader.js"></script>
 <link href="_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
+<style type="text/css">
+  .frame {
+    width: 2138px;
+    height: 1090px;
+    border: 0;
+    -ms-transform: scale(0.25);
+    -moz-transform: scale(0.25);
+    -o-transform: scale(0.25);
+    -webkit-transform: scale(0.25);
+    transform: scale(0.25);
+    
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+      
+      .wrap {
+    width: 540px;
+    height: 280px;
+    padding: 0;
+    overflow: hidden;
+ 
+}
+  
+</style>
 </head>
 <body>
 
@@ -67,10 +94,7 @@ if( isset($_SESSION['user_id']) ){
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -134,8 +158,10 @@ if( isset($_SESSION['user_id']) ){
   <div class="rows">
        <div class="col-md-12">
          <div class="col-md-6">
-          <iframe id="region1" src="images/plus33.png" style='height:300px;width:100%;object-fit: fill' >Please click here to select content</iframe>
+            <div class="wrap">
+          <iframe id="region1" class="frame" src="images/plus333.png">Please click here to select content</iframe>
        </div>
+     </div>
       <div class="col-md-6">
 
           <!-- <form class="feedback" name="feedback"> -->
@@ -155,7 +181,7 @@ if( isset($_SESSION['user_id']) ){
 
               <div class="col-md-6" style="padding-right:0px;">
                  <div class="form-group">
-                    <label for="exampleInputPassword2">Play Duration  :</label>
+                    <label for="exampleInputPassword2">Play Duration (sec):</label>
                     <input type="number" class="form-control" value="10" placeholder="Enter Duration(Sec)" name="duration" id="duration">
                   </div> 
               </div>
@@ -275,11 +301,11 @@ if( isset($_SESSION['user_id']) ){
 
       if(screen_mode=="enterprise")
       {
-           DisplaySubmit(screen_mode);    
+            DisplaySubmit(screen_mode,screen_name);
       }else if(screen_mode=="local")
     {
        //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
+        DisplaySubmit(screen_mode,screen_name);
        //console.log("Enterprise mode is on");
     }else 
       {
@@ -319,7 +345,7 @@ if( isset($_SESSION['user_id']) ){
                     if(jsonResponse.value==true)
                     {
                      //console.log(jsonResponse.status);
-                       DisplaySubmit(screen_mode);
+                         DisplaySubmit(screen_mode,screen_name);
                       //swal("success");
  
                       //window.location.reload();
@@ -356,7 +382,7 @@ if( isset($_SESSION['user_id']) ){
     }
 
 
-  function DisplaySubmit(screenmode)
+  function DisplaySubmit(screenmode,path)
   {
     if(screenmode=="enterprise")
     {
@@ -410,7 +436,7 @@ if( isset($_SESSION['user_id']) ){
 
           var form_data = new FormData();     
               form_data.append('media_name',media_name);
-              form_data.append('path',screen_name);             
+              form_data.append('path',path);             
               form_data.append('data',data);
            
             $.ajax({
@@ -428,38 +454,80 @@ if( isset($_SESSION['user_id']) ){
                    console.log("data==="+data);
                   try
                   {
+                     if(screenmode=="enterprise")
+                              {
+                        
                     
-                    if(screenmode=="enterprise")
-                    {
-                      var jsonResponse = JSON.parse(data);
+                    var jsonResponse = JSON.parse(data);
 
-                      if(jsonResponse.statusCode==0)
-                      {           
-                        //swal(jsonResponse.status);
+                          if(jsonResponse.statusCode==0)
+                          {
+                            
+                          
 
-                        setTimeout(function () { 
-                          swal({
-                            title: "success",
-                            text: jsonResponse.status,
-                            type: "success",
-                            confirmButtonText: "OK"
-                          },
-                          function(isConfirm){
-                            if (isConfirm) {
-                              //window.location.reload();
+                            setTimeout(function () { 
+                            swal({
+                              title: "success",
+                              text: jsonResponse.status,
+                              type: "success",
+                              confirmButtonText: "OK"
+                            },
+                            function(isConfirm){
+                              if (isConfirm) {
+                            
                                 window.location = "/smweb/enterprise.php";
-                            }
-                          }); }, 1000);
+                              }
+                            }); }, 1000);
 
                           }else if(jsonResponse.statusCode==1)
                           {
-                            swal(jsonResponse.status);
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                        
                           }
                           else if(jsonResponse.statusCode==2)
                           {
-                            swal(jsonResponse.status);
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
 
-                          }  
+                               if (isConfirm){
+                                   DisplaySubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            }
                     }else if(screenmode=="local")
                       {
                 
@@ -514,12 +582,13 @@ if( isset($_SESSION['user_id']) ){
                    }catch(Exception)
                    {
                       swal('Dear user, Unable to push content please try again');
-                   } 
+                   }
 
-                  }
+                }
                 });
 
           }
+        
 </script>
 <!-- modal -->
 

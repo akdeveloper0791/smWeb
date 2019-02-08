@@ -190,15 +190,18 @@ ini_set('max_execution_time', 3600);
   	 		'status'=>'Campaign has been published successfully'));
   	 }else if(count($path) == count($failedScreens))
   	 {
-  	 	echo json_encode(array('statusCode'=>2,
-  	 		'status'=>'Unable to publish  to the screens, please check the connections'));
+  	 	$failedScreensNames = getFailedScreens();
+  	 	echo json_encode(array('statusCode'=>1,
+  	 		'status'=>'Unable to publish  to the screens,('.implode(",", $failedScreensNames).') please check the connections and resend'));
   	 }else
   	 {
   	 	 //publishing failed for some screens,,
   	 	 //get the screens
+  	 	
   	 	 $failedScreensNames = getFailedScreens();
   	 	 echo json_encode(array('statusCode'=>2,
-  	 		'status'=>'Unable to publish  to the some of the screens,('.implode(",", $failedScreensNames).'), please check the connections'));
+  	 		'status'=>'Unable to publish  to the some of the screens,('.implode(",", $failedScreensNames).') please check the connections and resend',
+  	 		'ip'=>$failedScreens));
   	 }
 
   	 //close FTP connection

@@ -46,20 +46,12 @@ if( isset($_SESSION['user_id']) ){
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
 <link rel='shortcut icon' type='image/x-icon' href='images/signage.ico' />
-<!-- <link rel="stylesheet" href="js/js/bootstrap.min.css"> -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
-
 <script src="js/js/popper.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
-
 <link href="css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="js/sweetalert.css">
-
 <link href="_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
-
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 <style type="text/css">
 
 
@@ -90,7 +82,29 @@ if( isset($_SESSION['user_id']) ){
           margin-left:2px;
         }
       
-      
+      .wrap {
+    width: 540px;
+    height: 280px;
+    padding: 0;
+    overflow: hidden;
+ 
+}
+.frame {
+    width: 2138px;
+    height: 1090px;
+    border: 0;
+    -ms-transform: scale(0.25);
+    -moz-transform: scale(0.25);
+    -o-transform: scale(0.25);
+    -webkit-transform: scale(0.25);
+    transform: scale(0.25);
+    
+    -ms-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
     
 </style>
 <style type="text/css">
@@ -124,10 +138,7 @@ if( isset($_SESSION['user_id']) ){
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -183,7 +194,11 @@ if( isset($_SESSION['user_id']) ){
   </div>
   <div class="rows">
                    <div class="col-md-6">
-                    <iframe id="region1"  src="images/plus33.png" style='height:300px;width:100%;object-fit: fill'>Please click here to select content</iframe>
+                   <!--  <iframe id="region1"  src="images/plus33.png" style='height:300px;width:100%;object-fit: fill'>Please click here to select content</iframe> -->
+                    <div class="wrap">
+                        <!-- This version works on FF 26, Chrome 32, Opera 18, and IE 9-11.  -->
+                        <iframe class="frame" id="region1" src="images/plus333.png"></iframe>
+                    </div>
                   </div>
                    <div class="col-md-6">
 
@@ -236,7 +251,7 @@ if( isset($_SESSION['user_id']) ){
                             <div class="col-md-6" style="padding-right:0px;">
 
                               <div class="form-group">
-                                 <label for="exampleInputPassword2">Play Duration : </label>
+                                 <label for="exampleInputPassword2">Play Duration (sec): </label>
                                   <input type="number" class="form-control" value="10" placeholder="Enter Duration in Second(s)" name="duration" id="duration">
                               </div>
 
@@ -532,13 +547,13 @@ function ScreenConnection()
     if(screen_mode=="enterprise")
     {
        //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
-       //console.log("Enterprise mode is on");
+       DisplaySubmit(screen_mode,screen_name);
+       console.log("Enterprise mode is on");
     }else if(screen_mode=="local")
     {
        //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
-       //console.log("Enterprise mode is on");
+       DisplaySubmit(screen_mode,screen_name);
+       //console.log("local mode is on");
     }else 
     {
 
@@ -554,7 +569,7 @@ function ScreenConnection()
      $(document).ajaxSend(function () {
       $("#loading").show();
     });
-
+     console.log("channel_id="+screen_name);
     var form_data = new FormData();
       form_data.append('channel_id',screen_name);
       
@@ -585,7 +600,7 @@ function ScreenConnection()
                     {
                      //console.log(jsonResponse.status);
                       // ajaxindicatorstop();
-                       DisplaySubmit(screen_mode);
+                       DisplaySubmit(screen_mode,screen_name);
                       //swal("success");
  
                       //window.location.reload();
@@ -628,151 +643,16 @@ function ScreenConnection()
 
 }
 
-// function DisplaySubmitEnterpriseFTP(url_mode)
-//     {
-
-//         console.log("Url=="+url_mode);
 
 
-//         var media_name = document.getElementById('media_name').value;
-//         var duration = document.getElementById('duration').value;
-//         var text_media = document.getElementById('text_media').value;
-//         var zoomLevel = document.getElementById('zoomLevel').value;
-//         var scrollingSpeed = document.getElementById('scrollingSpeed').value;
-
-//         if(document.getElementById('fitscreen').checked==true)
-//         {
-//           var isFitToScreen = true;
-//         }else 
-//         {
-//           var isFitToScreen = false;
-//         }
-
-
-//         if(duration==null || duration=="" || duration==" " || duration=="Enter Duration(Sec)")
-//         {
-//           duration = 10;
-//         }
-//         if(zoomLevel==null || zoomLevel=="" || zoomLevel==" " || zoomLevel=="Enter in digits")
-//         {
-//           zoomLevel = 1.0;
-//         }
-//         if(scrollingSpeed==null || scrollingSpeed=="" || scrollingSpeed==" " || scrollingSpeed=="Enter Scrolling Speed Duration in Second(s)")
-//         {
-//           scrollingSpeed = 10;
-//         }
-
-
-//           if(file_name==undefined || file_name==null )
-//           {
-//              swal("Select appropriate file format...!");
-             
-//           }else 
-//           {
-       
-            
-//               var now = new Date();
-          
-//                   if(file_name.name!=null && file_name.name!=undefined)
-//                   {
-//                     var file_new_name = 'DNDM-'+now.getTime()+'.'+file_get_ext(file_name.name);
-
-//                     var fileee_name = 'DNDM-'+ media_name + '.'+file_get_ext(file_name.name);
-//                     console.log("image"+fileee_name);
-//                   }
-                 
-//           }
-   
-//           if(media_name=='Enter Media Name' || media_name=='' || media_name==null)
-//           {
-//             swal({
-//               title: 'Please Enter media name!',
-//               timer: 2000
-//              });
-//             return false;
-//           } 
-
-//           console.log(media_name+"...."+duration);
-
-//         var data2 = ({"zoomLevel":Number(zoomLevel),"scrollingSpeed":Number(scrollingSpeed),"isFitToScreen":isFitToScreen});
-
-//         var datastring = ([{"type":"File","width":100,"height":100,"top_margin":0,"bottom_margin":0,"left_margin":0,"right_margin":0,"media_name":fileee_name,"is_self_path":false,'properties':data2}]);
-
-//         var inputResult = { "type":'multi_region', "regions":datastring, "offer_text":text_media,"display_scroll_txt":false, "duration":duration,"resource":fileee_name};
-
-//         var data = JSON.stringify(inputResult);
-//             console.log(data);
-
-//           ajaxindicatorstart("<img src='images/ajax-loader.gif'><br/>File transfer in progress<br/> Please wait...!");
-//           var form_data = new FormData();     
-//             form_data.append('fileName',file_name);
-//             form_data.append('path',screen_name);             
-//             form_data.append('data',data);
-      
-//             form_data.append('media_name',media_name);
-           
-//             $.ajax({
-//                 type: "POST",
-//                 dataType: 'text',
-//                   url: url_mode,
-//                   cache: false,
-//                   contentType: false,
-//                   processData: false,
-//                   data: form_data,                         
-//                   type: 'post',
-                 
-//                  success: function(data)
-//                  {
-//                     console.log(data);
-//                     ajaxindicatorstop();
-
-//                    try
-//                    {
-//                       var jsonResponse = JSON.parse(data);
-
-//                       if(jsonResponse.statusCode==0)
-//                       {           
-                 
-
-//                         setTimeout(function () { 
-//                           swal({
-//                             title: "success!",
-//                             text: jsonResponse.status,
-//                             type: "success",
-//                             confirmButtonText: "OK"
-//                           },
-//                           function(isConfirm){
-//                             if (isConfirm) {
-                       
-//                                 window.location = "/smweb/enterprise.php";
-//                             }
-//                           }); }, 1000);
-
-//                       }else if(jsonResponse.statusCode==1)
-//                       {
-//                         swal(jsonResponse.status);
-//                       }
-//                       else if(jsonResponse.statusCode==2)
-//                       {
-//                         swal(jsonResponse.status);
-//                       } 
-
-//                    }catch(Exception)
-//                    {
-//                     alert('Dear user, Unable to push content please try again');
-//                    } 
-
-//                   }
-//                 });
-
-//       }
-
-function DisplaySubmit(screenmode)
+function DisplaySubmit(screenmode,path)
 {
+  console.log("status2"+path);
       if(screenmode=="enterprise")
       {
         var url_mode = "/smweb/enterprise/Api/PublishSingleRegCampaign.php";
-        // DisplaySubmitEnterpriseFTP(url_mode);
+  
+        console.log("status2 enterprise");
 
       }
       else if(screenmode=="local")
@@ -859,7 +739,7 @@ function DisplaySubmit(screenmode)
             }
           
 
-          //console.log("true or false=="+boolean_scroll_txt);
+          console.log("path=="+path);
           ajaxindicatorstart("<img src='images/ajax-loader.gif'><br/>File transfer in progress<br/> Please wait...");
 
           var datastring = {}
@@ -885,7 +765,7 @@ function DisplaySubmit(screenmode)
             form_data.append('fileName',file_name); 
             form_data.append('AudiofileName',audio_file_name); 
             form_data.append('data',data);
-            form_data.append('path',screen_name);
+            form_data.append('path',path);
             form_data.append('media_name',media_name);
     
                $.ajax({
@@ -911,7 +791,7 @@ function DisplaySubmit(screenmode)
                           if(jsonResponse.statusCode==0)
                           {
                             
-                            //swal(jsonResponse.status);
+                          
 
                             setTimeout(function () { 
                             swal({
@@ -922,20 +802,103 @@ function DisplaySubmit(screenmode)
                             },
                             function(isConfirm){
                               if (isConfirm) {
-                                //window.location.reload();
+                            
                                 window.location = "/smweb/enterprise.php";
                               }
                             }); }, 1000);
 
                           }else if(jsonResponse.statusCode==1)
                           {
-                             swal(jsonResponse.status);
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                        
                           }
                           else if(jsonResponse.statusCode==2)
                           {
-                             swal(jsonResponse.status);
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
 
-                          }  
+                               if (isConfirm){
+                                //console.log("failed ip - "+JSON.stringify(jsonResponse.ip));
+                                 DisplaySubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                            
+                                 // screen_name = [];
+                                 //  var str = jsonResponse.ip;
+                                 //  var myarray = str.split(',');
+                                 //   screen_name.push('[');
+                                 //  for(var i = 0; i < myarray.length; i++)
+                                 //  {
+                                 //      screen_name.push('"'+myarray[i]+'"');
+                                    
+                                 //  }
+                                 //    screen_name.push(']');
+                                 //   console.log(screen_name);
+                                 //   console.log(typeof(screen_name));
+                                 //     DisplaySubmit("enterprise",screen_name);
+
+                           // array1 = [];
+                           //    var str =JSON.stringify(jsonResponse.ip);
+                           //   var myarray = str.split(',');
+                           //     var array = JSON.parse("[" + myarray + "]");
+                           
+                           //      console.log(typeof(array));
+                          
+                           //        for(var i = 0; i < array.length; i++)
+                           //        {
+                           //            array1.push('"'+array[i]+'"');
+                                    
+                           //        }
+                           //     console.log(JSON.parse(array1));
+
+ //                           var array1 = [];
+ //                            var str =jsonResponse.ip;
+ //                            var myarray = str.split(',');
+ //                            for(var i = 0; i < myarray.length; i++)
+ //                                  {
+ //                                      array1.push(myarray[i]);
+                                    
+ //                                  }
+ //                            console.log(array1);
+ // DisplaySubmit("enterprise",array1);
+                                 
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            }
+
+                   
                       }else if(screenmode=="local")
                       {
                 

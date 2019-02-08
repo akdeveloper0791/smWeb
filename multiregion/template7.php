@@ -32,8 +32,6 @@ if( isset($_SESSION['user_id']) ){
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
 <link href="../css/bootstrap.min.css" rel="stylesheet">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
 <link href="../css/style.css" rel="stylesheet">
 <script src="../js/sweetalert.js"></script>
 <link rel="stylesheet" href="../js/sweetalert.css">
@@ -41,8 +39,7 @@ if( isset($_SESSION['user_id']) ){
 <script type="text/javascript" src="../js/default_busy_loader.js"></script>
 <link href="../_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
 <script src="../js/js/popper.min.js"></script>
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
-
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 <style type="text/css">
 
       
@@ -118,10 +115,7 @@ if( isset($_SESSION['user_id']) ){
       </button>
       <a href="../index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="../images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="../images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -603,7 +597,7 @@ if( isset($_SESSION['user_id']) ){
 
               <div class="col-md-6" style="padding-left:0px;padding-right:0px;">
                  <div class="form-group">
-                    <label for="exampleInputPassword2">Play Duration :</label>
+                    <label for="exampleInputPassword2">Play Duration (sec):</label>
                     <input type="number" class="form-control" placeholder="Enter Duration(Sec)" value="10" name="duration" id="file_duration">
                   </div> 
                    </div>
@@ -902,13 +896,13 @@ $(document).ready(function(){
 
     if(screen_mode=="enterprise")
     {
-         MultiSubmit(screen_mode);
+         MultiSubmit(screen_mode,screen_name);
          //console.log("Enterprise mode is on");
 
     }else if(screen_mode=="local")
     {
        //MultiSubmit(screen_mode);
-       MultiSubmit(screen_mode);
+        MultiSubmit(screen_mode,screen_name);
        //console.log("Enterprise mode is on");
     }else 
     {
@@ -945,7 +939,7 @@ $(document).ready(function(){
                   if(jsonResponse.value==true)
                   {
                     //console.log("successfully");
-                      MultiSubmit(screen_mode);
+                      MultiSubmit(screen_mode,screen_name);
                  
                   }else if(jsonResponse.value==false)
                   {
@@ -984,7 +978,7 @@ $(document).ready(function(){
 
 }
 
-function MultiSubmit(screenmode)
+function MultiSubmit(screenmode,path)
 {
 
   if(screenmode=="enterprise")
@@ -1087,7 +1081,7 @@ if(multidatastring4==undefined || multidatastring4==null || multidatastring4==""
 
           var form_data = new FormData();     
            form_data.append('regions_count',4);  
-            form_data.append('path',screen_name);             
+            form_data.append('path',path);             
             form_data.append('data1',data1);
             form_data.append('data2',data2);
             form_data.append('data3',data3);
@@ -1139,7 +1133,7 @@ if(multidatastring4==undefined || multidatastring4==null || multidatastring4==""
                           if(jsonResponse.statusCode==0)
                           {
                             
-                            //swal(jsonResponse.status);
+                          
 
                             setTimeout(function () { 
                             swal({
@@ -1150,20 +1144,60 @@ if(multidatastring4==undefined || multidatastring4==null || multidatastring4==""
                             },
                             function(isConfirm){
                               if (isConfirm) {
-                                //window.location.reload();
+                            
                                 window.location = "/smweb/enterprise.php";
                               }
                             }); }, 1000);
 
                           }else if(jsonResponse.statusCode==1)
                           {
-                             swal(jsonResponse.status);
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                        
                           }
                           else if(jsonResponse.statusCode==2)
                           {
-                             swal(jsonResponse.status);
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
 
-                          }  
+                               if (isConfirm){
+                                  MultiSubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            }
                       }else if(screenmode=="local")
                       {
                 

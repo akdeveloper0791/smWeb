@@ -45,18 +45,15 @@ if( isset($_SESSION['user_id']) ){
 <meta name="generator" content="">
 <link rel='shortcut icon' type='image/x-icon' href='images/signage.ico' />
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <script src="js/sweetalert.js"></script>
 <link rel="stylesheet" href="js/sweetalert.css">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/default_busy_loader.js"></script>
 <script src="js/jscolor.js"></script>
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 <script src="js/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="css/bootstrap-select.min.css">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 
 <style type="text/css">
   .modal {
@@ -99,10 +96,7 @@ if( isset($_SESSION['user_id']) ){
 			</button>
 			<a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
 		</div>
 		<div id="navbar-collapse-02" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
@@ -573,7 +567,7 @@ if( isset($_SESSION['user_id']) ){
             </div>
 
             <div class="form-group">
-                <label for="modify_image_duration">Play Duration :</label>
+                <label for="modify_image_duration">Play Duration (sec):</label>
                 <input type="number" class="form-control" placeholder="Enter Duration in Second(s)" name="modify_image_duration" id="modify_image_duration">
             </div>
 
@@ -1223,7 +1217,7 @@ $('#default_Channel').change(function(){
 
 				var newRows = "<div id='modifylist_"+i+"' style='border:1px solid orange;border-radius:5px;margin-bottom:5px;padding: 10px;'>";
 
-				newRows +="<p id='modify_name_"+i+"' style='margin:0px;'>"+getFileName(record)+"<span id='modify_edit_"+i+"' class='fa fa-pencil-square-o' onclick='ReadFileContent(\""+record+"\",\""+Channel_Channel+"\");' style='float:right;margin-right:10px;padding-top:5px;'>"+"</span>"+"</p>"
+				newRows +="<p id='modify_name_"+i+"' style='margin:0px;'>"+getFileName(record)+"<span id='modify_edit_"+i+"' class='fa fa-edit' onclick='ReadFileContent(\""+record+"\",\""+Channel_Channel+"\");' style='float:right;margin-right:10px;padding-top:5px;'>"+"</span>"+"</p>"
 
 
 

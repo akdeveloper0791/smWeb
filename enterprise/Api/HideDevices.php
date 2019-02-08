@@ -31,7 +31,7 @@ $conn = mysqli_connect("localhost",$username,$password,$database);
                 if ($GLOBALS['conn']->query($updateQuery) === TRUE) {
                       echo json_encode(array(
                       	'statusCode'=>0,'status'=>
-                      	"Updated successfully"));
+                      	"Device Updated"));
                  } else {
                      echo json_encode(array(
                       	'statusCode'=>13,'status'=>

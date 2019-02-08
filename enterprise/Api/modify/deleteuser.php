@@ -6,7 +6,7 @@ $conn = mysqli_connect($server,$username,$password);
 mysqli_select_db($conn,$database);
           
              //then delete from the table
-             $deleteQuery = "DELETE FROM users WHERE id = ".$screenid;
+             $deleteQuery = "DELETE FROM users WHERE id = ".$screenid." AND status = 0";
 
 //  $deleteQuery = drop trigger user_channels;
 // DELIMITER |
@@ -26,11 +26,11 @@ mysqli_select_db($conn,$database);
                  if($conn->affected_rows>=1)
                  {
                   echo json_encode(array('statusCode'=>0,
-                  'status'=>'user has been deleted successfully'));
+                  'status'=>'Staff has been deleted successfully'));
                  }else
                  {
                   echo json_encode(array('statusCode'=>1,
-                  'status'=>'Admin user can not be deleted'));
+                  'status'=>'Admin can not be deleted'));
                  }
 
                  

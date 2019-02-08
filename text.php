@@ -68,10 +68,7 @@ if( isset($_SESSION['user_id']) ){
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -150,7 +147,7 @@ if( isset($_SESSION['user_id']) ){
         <div class="col-md-6" style="padding-right:0px;">
 
             <div class="form-group">
-              <label for="exampleInputPassword2">Play Duration :</label>
+              <label for="exampleInputPassword2">Play Duration (sec):</label>
               <input type="number" class="form-control" value="10" placeholder="Enter Duration in Second(s)" name="duration" id="duration">
              <!--  <p>Default Duration:10s</p> -->
             </div>
@@ -293,8 +290,8 @@ if( isset($_SESSION['user_id']) ){
            var datetime = currentdate.getDate() + "-"
                 + (currentdate.getMonth()+1)  + "-" 
                 + currentdate.getFullYear() + "_"  
-                + currentdate.getHours() + "-"  
-                + currentdate.getMinutes() + "-" 
+                + currentdate.getHours() + "."  
+                + currentdate.getMinutes() + "." 
                 + currentdate.getSeconds();
            document.getElementById("file_name").value=datetime;
 
@@ -351,12 +348,12 @@ if( isset($_SESSION['user_id']) ){
 
     if(screen_mode=="enterprise")
     {
-         DisplaySubmit(screen_mode);
+          DisplaySubmit(screen_mode,screen_name);
         
     }else if(screen_mode=="local")
     {
        //MultiSubmit(screen_mode);
-       DisplaySubmit(screen_mode);
+       DisplaySubmit(screen_mode,screen_name);
        //console.log("local mode is on");
     }else 
     {
@@ -396,7 +393,7 @@ if( isset($_SESSION['user_id']) ){
                     if(jsonResponse.value==true)
                     {
                      //console.log(jsonResponse.status);
-                       DisplaySubmit(screen_mode);
+                         DisplaySubmit(screen_mode,screen_name);
                       //swal("success");
  
                       //window.location.reload();
@@ -439,14 +436,14 @@ if( isset($_SESSION['user_id']) ){
 
 
 
-function DisplaySubmit(screenmode)
+function DisplaySubmit(screenmode,path)
 {
 
       if(screenmode=="enterprise")
       {
           var url_mode = "/smweb/enterprise/Api/PublishSingleRegCampaign.php";
 
-          DisplaySubmitEnterpriseFTP(url_mode);
+          DisplaySubmitEnterpriseFTP(url_mode,screen_name);
       }else if(screenmode=="local")
       {
         console.log("successfullyasdasda");
@@ -677,7 +674,7 @@ function DisplaySubmit(screenmode)
 
   
 
-  function DisplaySubmitEnterpriseFTP(url_mode)
+  function DisplaySubmitEnterpriseFTP(url_mode,path)
   {
       console.log("Url=="+url_mode);
 
@@ -734,7 +731,7 @@ function DisplaySubmit(screenmode)
 
             var form_data = new FormData();     
                 //form_data.append('file_name',file_name);
-                form_data.append('path',screen_name);             
+                form_data.append('path',path);             
                 form_data.append('data',data);
                 //form_data.append('offer_text',text_media);
                 //form_data.append('duration',duration);
@@ -761,32 +758,75 @@ function DisplaySubmit(screenmode)
                   {
                     var jsonResponse = JSON.parse(data);
 
-                    if(jsonResponse.statusCode==0)
-                    {           
-                      //swal(jsonResponse.status);
+                          if(jsonResponse.statusCode==0)
+                          {
+                            
+                          
 
-                        setTimeout(function () { 
-                          swal({
-                            title: "success",
-                            text: jsonResponse.status,
-                            type: "success",
-                            confirmButtonText: "OK"
-                          },
-                          function(isConfirm){
-                            if (isConfirm) {
-                              //window.location.reload();
+                            setTimeout(function () { 
+                            swal({
+                              title: "success",
+                              text: jsonResponse.status,
+                              type: "success",
+                              confirmButtonText: "OK"
+                            },
+                            function(isConfirm){
+                              if (isConfirm) {
+                            
                                 window.location = "/smweb/enterprise.php";
-                            }
-                          }); }, 1000);
+                              }
+                            }); }, 1000);
 
-                    }else if(jsonResponse.statusCode==1)
-                    {
-                        swal(jsonResponse.status);
-                    }
-                    else if(jsonResponse.statusCode==2)
-                    {
-                        swal(jsonResponse.status);
-                    }  
+                          }else if(jsonResponse.statusCode==1)
+                          {
+                    
+                                
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                 
+                                ScreenConnection1();
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                        
+                          }
+                          else if(jsonResponse.statusCode==2)
+                          {
+                            
+                          swal({
+                                title: "Alert",
+                                text: jsonResponse.status,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: '#DD6B55',
+                                confirmButtonText: 'Yes, Resend!',
+                                cancelButtonText: "No, Close!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                             },
+                             function(isConfirm){
+
+                               if (isConfirm){
+                                   DisplaySubmit("enterprise",JSON.stringify(jsonResponse.ip));
+                                }else{
+                                  swal("Please try again later");
+                                }
+                             });
+                            } 
+                              
 
                   }catch(Exception)
                   {

@@ -38,17 +38,17 @@ if( isset($_SESSION['user_id']) ){
 <meta name="generator" content="">
 <link rel='shortcut icon' type='image/x-icon' href='images/signage.ico' />
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<!-- <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"> -->
 <link href="css/style.css" rel="stylesheet">
 <script src="js/sweetalert.js"></script>
 <link rel="stylesheet" href="js/sweetalert.css">
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/default_busy_loader.js"></script>
 <script src="js/jscolor.js"></script>
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
-
+<!-- <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" /> -->
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
+<!-- <script type="text/javascript" src="fontawesome-free-5.7/js/fontawesome.min.js"></script> -->
 
 <link rel="stylesheet" href="css/jquery-ui.css">
 
@@ -335,22 +335,35 @@ input[type="checkbox"]:focus + label::before {
       </button>
       <a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
     </div>
     <div id="navbar-collapse-02" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
 
         <li class="propClone" id="display_list_enterprise_devices" style="display: none;"><a class="fa fa-check-circle" style="color:#7bbe72;cursor: pointer;" onclick="Display_Device_List();"></a></li>
 
-        <li class="propClone" id="hide_list_enterprise_devices" style="display: none;"><a class="fa fa-ban" style="color:#d74138;cursor: pointer;" onclick="HideDeviceList();"></a></li>
+        <li class="propClone" id="hide_list_enterprise_devices" style="display: none;"><a class="fa fa-times-circle" style="color:#d74138;cursor: pointer;" onclick="HideDeviceList();"></a></li>
 
-        <li class="propClone" id="refresh_list_enterprise_devices"><a class="fa fa-refresh" onclick="RefreshDeviceList();"></a></li>
+        <li class="propClone" id="refresh_list_enterprise_devices"><a class="fa fa-sync-alt"  id="refresh_enterprise_devices" onclick="RefreshDeviceList();"></a></li>
 
-        <li class="propClone" id="add_enterprise_mac_address"><a class="fa fa-television" onclick="add_display();"></a></li>
-        <li class="propClone" id="add_enterprise_mac_address"><a class="fa fa-user-plus" href="./enterprise/Api/Addscreen.php"></a></li>
+        <li class="propClone" id="add_enterprise_mac_address"><a class="fa fa-tv" onclick="add_display();"></a>
+         <?php 
+
+               // $query = "SELECT Channel.names as ch_names,Channel.ch_id as ch_id FROM (SELECT ch_id FROM user_channels WHERE user_id = ".$_SESSION['user_id']." ) as UserChannel INNER JOIN channel_table as Channel ON UserChannel.ch_id = Channel.ch_id";
+                 // $query = "SELECT * FROM enterprise_channel_table";
+             $check = "SELECT * FROM users WHERE id = ".$_SESSION['user_id']." AND status = 1";
+            $res1=mysqli_query($link,$check);
+            if ($res1->num_rows > 0) {
+              ?>
+               <li class="propClone" id="add_user_permissions"><a class="fa fa-user" href="./enterprise/Api/Addscreen.php"></a></li>
+              <!--  <i class="fas fa-user"></i> -->
+               <li class="propClone" id="superuser"><a class="fa fa-user-plus" href="register.php"></a></li>
+               <?php
+            }
+              
+          ?>
+    
+       
 
         <!-- <li class="propClone" id="superuser"><a href="addscreen.php">Add Screen</a></li> -->
           <li class="propClone" id="logout"><a href="logout.php">Logout</a></li>
@@ -388,7 +401,16 @@ input[type="checkbox"]:focus + label::before {
              <?php 
 
                // $query = "SELECT Channel.names as ch_names,Channel.ch_id as ch_id FROM (SELECT ch_id FROM user_channels WHERE user_id = ".$_SESSION['user_id']." ) as UserChannel INNER JOIN channel_table as Channel ON UserChannel.ch_id = Channel.ch_id";
-                 $query = "SELECT * FROM enterprise_channel_table";
+                 // $query = "SELECT * FROM enterprise_channel_table";
+             $query1 = "SELECT * FROM users WHERE id = ".$_SESSION['user_id']." AND status = 1";
+            $res1=mysqli_query($link,$query1);
+            if ($res1->num_rows > 0) {
+              $query = "SELECT * FROM enterprise_channel_table";
+              }else{
+              $query = "SELECT * FROM enterprise_channel_table WHERE ch_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id']." )";
+            }
+
+            
 
                 // $res=mysqli_query($link,"select * from channel_table");
                 $res=mysqli_query($link,$query);
@@ -613,10 +635,10 @@ input[type="checkbox"]:focus + label::before {
 
  <br/><br/><br/><br/><br/>
     <br/><br/><br/><br/>
-    <script type="text/javascript">
+<!--     <script type="text/javascript">
        $('#superuser').hide(); 
        $('#logout').hide(); 
-    </script>
+    </script> -->
 
   <?php endif; ?>
 <!-- FOOTER =============================-->
@@ -844,7 +866,7 @@ input[type="checkbox"]:focus + label::before {
             </div>
 
             <div class="form-group">
-                <label for="modify_image_duration">Play Duration :</label>
+                <label for="modify_image_duration">Play Duration (sec) :</label>
                 <input type="number" class="form-control" placeholder="Enter Duration in Second(s)" name="modify_image_duration" id="modify_image_duration">
             </div>
 
@@ -1260,13 +1282,11 @@ input[type="checkbox"]:focus + label::before {
         
         <!-- Modal body -->
         <div class="modal-body">
-          <a onclick="add_channel();" style="float:right;"><button class="btn btn-primary-outline">Add Channel</button></a>
-         <br/>
          
-          <!--   <div class="form-group">
+            <div class="form-group">
                 <label for="enterprise_display_name"></label>
                   <input type="text" class="form-control" placeholder="Enter Display Name" name="enterprise_display_name" id="enterprise_display_name">
-            </div> -->
+            </div>
 
             <div class="form-group">
                 <label for="enterprise_mac_address"></label>
@@ -1278,7 +1298,7 @@ input[type="checkbox"]:focus + label::before {
                   <!--   <input type="text" class="form-control" placeholder="Enter Display Group Name" name="enterprise_group_name" id="enterprise_group_name"> -->
                   <select name="default_Channel1" id="default_Channel1" class="form-control" required>
                    <option>Select Display Groups</option>
-             <?php 
+     <!--         <?php 
 
                  $query = "SELECT * FROM enterprise_channel_table";
                
@@ -1289,7 +1309,26 @@ input[type="checkbox"]:focus + label::before {
               <option value="<?php echo $row["ch_id"]; ?>" ><?php echo $row["names"]; ?></option>
               <?php
             }
-            ?>
+            ?> -->
+
+                <?php 
+             $query1 = "SELECT * FROM users WHERE id = ".$_SESSION['user_id']." AND status = 1";
+            $res1=mysqli_query($link,$query1);
+            if ($res1->num_rows > 0) {
+              $query = "SELECT * FROM enterprise_channel_table";
+              }else{
+              $query = "SELECT * FROM enterprise_channel_table WHERE ch_id IN ( select ch_id FROM enterprise_channels WHERE user_id = ".$_SESSION['user_id']." )";
+            }
+    
+              $res=mysqli_query($link,$query);
+
+                while($row=mysqli_fetch_array($res)){
+                ?>
+              <option value="<?php echo $row["ch_id"]; ?>" ><?php echo $row["names"]; ?></option>
+              <?php
+            }
+            ?> 
+
             </select>
             </div> 
      
@@ -1307,40 +1346,7 @@ input[type="checkbox"]:focus + label::before {
     </div>
   </div>
 
-   <!--Enterprise Display Name -->
-   <div class="modal" id="add_channel_popup">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title" style="text-align:center;">Add Display
-          <span type="button" class="close" data-dismiss="modal" onclick="$('#add_channel_popup').hide();document.getElementById('add').checked = true;">&times;</span></h4>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-         
-   
-                        <div class="form-group">
-                              <label for="exampleInputPassword2">Channel Name *</label>
-                             <input type="text" class="form-control" placeholder="Enter channel name" name="channel" id="channel">
-                            </div>  
-     
-        </div>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-        <center>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#add_channel_popup').hide();document.getElementById('add').checked = true;">Close</button>          
-          <button class="btn btn-success" id="submit" style="display:inline-block;" onclick="savechannel()">Submit</button>
-       </center>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-
+ 
 
 
    <div class="modal" id="Control_Panel">
@@ -1689,7 +1695,7 @@ $('#default_Channel').change(function(){
 
         var newRows = "<div id='modifylist_"+i+"' style='border:1px solid orange;border-radius:5px;margin-bottom:5px;padding: 10px;'>";
 
-        newRows +="<p id='modify_name_"+i+"' style='margin:0px;'>"+getFileName(record)+"<span id='modify_edit_"+i+"' class='fa fa-pencil-square-o' onclick='ReadFileContent(\""+record+"\",\""+Channel_Channel+"\");' style='float:right;margin-right:10px;padding-top:5px;'>"+"</span>"+"</p>"
+        newRows +="<p id='modify_name_"+i+"' style='margin:0px;'>"+getFileName(record)+"<span id='modify_edit_"+i+"' class='fa fa-edit' onclick='ReadFileContent(\""+record+"\",\""+Channel_Channel+"\");' style='float:right;margin-right:10px;padding-top:5px;'>"+"</span>"+"</p>"
 
 
 
@@ -2840,20 +2846,22 @@ $('#default_Channel').change(function(){
   }
 
 
-  function add_channel()
-  {
-
-    $('#add_channel_popup').show();
-
-
-  }
 
 
   function AddEnterpriseMacAddress()
   {
-      // var display_name = document.getElementById('enterprise_display_name').value;
+       var display_name = document.getElementById('enterprise_display_name').value;
       var mac_address = document.getElementById('enterprise_mac_address').value;
       var group_name = document.getElementById('default_Channel1').value;
+
+          if(display_name=='Enter Display Name' || display_name=='' || display_name==null)
+      {
+          swal({
+            title: 'Please enter screen name',
+            timer: 2000
+          });
+          return false;
+      }
 
           if(mac_address=='Enter Player MAC Address' || mac_address=='' || mac_address==null)
       {
@@ -2877,7 +2885,8 @@ $('#default_Channel').change(function(){
   
 
       var datastring = {}
-          datastring['name'] = group_name;
+          datastring['name'] = display_name;
+          datastring['ch_id'] = group_name;
           datastring['mac'] = mac_address;
           datastring['status'] = "0";
 
@@ -2985,9 +2994,9 @@ $('#default_Channel').change(function(){
                     }
                     else if(jsonResponse.statusCode==2)
                     {
-                       swal(jsonResponse.status);
+                       //swal(jsonResponse.status);
 
-                       document.getElementById('static_text_h4').innerHTML = "No Display";
+                       document.getElementById('static_text_h4').innerHTML = "No Display(s) Found";
                        //document.getElementById('static_text_h4').style.display = "none";
                        $('#static_text_p').hide();
 
@@ -3054,6 +3063,7 @@ $('#default_Channel').change(function(){
 
 
   console.log("all-screen"+JSON.stringify(list));
+  //console.log("group nAME"+group_names);
  //console.log("selected-screen"+JSON.stringify(obj));
 
      var totalen = list.length;
@@ -3078,7 +3088,7 @@ $('#default_Channel').change(function(){
     
 
 
-        if(display_group==record.name){
+        if(display_group==record.ch_id){
 
 
           if(record.is_hide==1)
@@ -3089,7 +3099,7 @@ $('#default_Channel').change(function(){
 
               // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
-              newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
+              newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
 
 
@@ -3097,7 +3107,7 @@ $('#default_Channel').change(function(){
                {
 
 
-                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'> Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
+                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
                }
 
@@ -3108,13 +3118,13 @@ $('#default_Channel').change(function(){
 
               // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
 
-               newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
+               newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
 
                }else if(record.status==1)
               {
 
                  // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
-                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
+                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
 
             }
           }
@@ -3129,7 +3139,7 @@ $('#default_Channel').change(function(){
               if(record.status==0)
                { 
 
-              newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
+              newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
                // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
@@ -3139,7 +3149,7 @@ $('#default_Channel').change(function(){
 
 
                   // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
-                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
+                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper1' title='In-Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'></div>"
 
             }
 
@@ -3151,14 +3161,14 @@ $('#default_Channel').change(function(){
                { 
 
               // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
-               newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
+               newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_red.jpg' id='enterprise_status_img_"+record.mac+"' alt='red.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='In-Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label><input type='checkbox'  id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' disabled  /><i class='help1' title='In-Active Display'></i></label></div>"
 
                }else if(record.status==1)
               {
 
                  // newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div> <div style='transform: translate(490px, -22px);'>"+ record.device_group +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
 
-                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>Screen "+ record.sc_id +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
+                  newRows +="<div class='checkbox' style='border:2px solid #ddd;border-radius:5px;padding:8px;margin-bottom:5px;'><label onclick='boxclick123("+record.is_hide+",\""+record.mac+"\");'><input type='checkbox' class='checkbx_links_keyword123' id='enterprise_mac_"+record.mac+"' value='"+record.mac+"' /><i class='helper' title='Active Device'></i><div style='transform: translate(5px, 2px);'>"+ record.name +"</div></label>"+"<img src='images/circle_green.jpg' id='enterprise_status_img_"+record.mac+"' alt='green.jpg' width='32' height='32' style='float:right;cursor:pointer;margin-right: 35px;' title='Active State'>" +"<img src='images/delete.jpg' alt='delete.jpg' id='enterprise_delete_"+record.mac+"' onclick='deleteDevicesList(\""+record.mac+"\");' width='32' height='32' style='float:right;cursor:pointer;' title='Delete Display'><label onclick='boxclick1234();'><input type='checkbox' class='checkbx_links_keyword1234' id='enterprise_mac_"+record.ip+"' value='"+record.ip+"' /><i class='help'  title='Active Display'></i></label></div>"
 
             }
 
@@ -3831,6 +3841,16 @@ $('#default_Channel').change(function(){
 
   window.onload = ListEnterpriseDevices();
 
+   // window.onload = RefreshDeviceList();
+
+
+// $("document").ready(function() {
+//     setTimeout(function() {
+//       $("#refresh_enterprise_devices").trigger('click');
+//       console.log("sdsd");
+//     },1000);
+
+//   });
 
 
 </script>
@@ -4166,7 +4186,7 @@ function savechannel(){
 
   if(channel==' ' || channel=='' || channel==null){
   swal({
-  title: 'Please enter channel name..',
+  title: 'Please enter group name..',
   timer: 2000
 });
   return false;
@@ -4197,8 +4217,8 @@ function savechannel(){
               {
                 //swal(jsonResponse.status);
                 swal({ 
-                title: "channel",
-                          text: "Added successfully",
+                title: "Group",
+                          text: "Created successfully",
                           type: "success"
                 },
                 function(){
@@ -4218,6 +4238,9 @@ function savechannel(){
         });
 }
 
+// document.addEventListener("DOMContentLoaded", function() {
+//   RefreshDeviceList();
+// });
  </script> 
 
 

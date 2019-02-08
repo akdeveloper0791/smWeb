@@ -456,7 +456,7 @@ if( isset($_SESSION['user_id']) ){
             </div>
 
             <div class="form-group">
-                <label for="modify_image_duration">Play Duration :</label>
+                <label for="modify_image_duration">Play Duration (sec):</label>
                 <input type="number" class="form-control" placeholder="Enter Duration in Second(s)" name="modify_image_duration" id="modify_image_duration">
             </div>
 
@@ -639,7 +639,7 @@ if( isset($_SESSION['user_id']) ){
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title" style="text-align:center;">Multi Region
+          <h4 class="modal-title" style="text-align:center;">Modify Multi Region
           <span type="button" class="close" data-dismiss="modal" onclick="$('#ModifyMultiRegion').hide();">&times;</span></h4>
         </div>
         

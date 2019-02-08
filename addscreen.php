@@ -34,13 +34,11 @@ if( isset($_SESSION['user_id']) ){
 <meta name="generator" content="">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="_css/Icomoon/style.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <script src="js/sweetalert.js"></script>
 <link rel="stylesheet" href="js/sweetalert.css">
 <script type="text/javascript" src="js/default_busy_loader.js"></script>
-<!-- <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet"> -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" href="Font-Awesome-5.5.0/web-fonts-with-css/css/fontawesome-all.min.css">
 <style type="text/css">
   html, body{
   margin:0;
@@ -119,10 +117,7 @@ th:first-child div{
 			</button>
 			<a href="index.php" class="navbar-brand brand" style="
     display: inline-flex;
-"> <img src="images/signage.png" alt="" class="logo" style="
-    width: 32px;
-    height:  32px;margin: 0 10px;
-">Signage Manager </a>
+"> <img src="images/signage.png" alt="" class="logo" style="width: 80px;height: 70px;margin: -15px 0px;">Signage Manager </a>
 		</div>
 		<div id="navbar-collapse-02" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">

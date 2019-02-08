@@ -46,7 +46,7 @@
     if($isCampaignSent)
     {
        echo json_encode(array('statusCode'=>0,
-  	 		'status'=>'Campaign has been published successfully')); 
+  	 		'status'=>'Campaign modify has been published successfully')); 
     }else
     {
     	echo json_encode(array('statusCode'=>2,
